@@ -40,7 +40,7 @@ stages {
       }
       steps {
       script {
-      sh 'scripts/test.sh'
+      sh 'scripts/test.sh $BUILD_NUMBER'
       }
 
       }

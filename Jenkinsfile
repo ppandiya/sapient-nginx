@@ -11,9 +11,27 @@ pipeline {
                 script {
                   docker.build registry + ":$BUILD_NUMBER"
 
-                }            }
+                }
+
+               }
         }
+
+
+	stage('Deploy')
+  {
+           when { changeRequest target: 'master' }
+
+steps{
+    script {
+      docker.withRegistry('', registryCredential )
+ {
+        dockerImage.push()
+      }
+}
 
     }
 }
 
+
+}
+}

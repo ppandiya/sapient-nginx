@@ -20,6 +20,8 @@ pipeline {
 	stage('Deploy')
   {
            when { changeRequest target: 'master' }
+	  when {branch: 'master'}
+	  
 
 steps{
     script {

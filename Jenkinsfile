@@ -13,6 +13,26 @@ pipeline {
 
                 }            }
         }
+	stage('Deploy') {
+           when {
+               allOf {
+                   environment name: 'CHANGE_ID', value: ''
+                   branch 'master'
+               }
+           }
+       
+steps{
+    script {
+      docker.withRegistry('', registryCredential )
+ {
+        dockerImage.push()
+      }
+}
+
+
+
+
+
 
     }
 }

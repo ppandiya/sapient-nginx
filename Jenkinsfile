@@ -10,29 +10,32 @@ stages {
       steps {
       script {
       dockerImage = docker.build registry + ":$BUILD_NUMBER"
+      dockerImage_L = docker tag registry+ ":$BUILD_NUMBER" registry+":latest"
 
       }
 
       }
       }
 
-      stage('Deploy')
+      stage('PublishImage')
       {
-      
+
 	when {
-  	changeRequest()
+        branch 'master'
+
 	}
       steps{
       script {
       docker.withRegistry('', registryCredential )
       {
       dockerImage.push()
+      dockerImage_L.push()
       }
       }
 
       }
       }
-      
+
       stage('Test') {
       when {
       branch 'master'
@@ -45,7 +48,19 @@ stages {
 
       }
       }
+      stage('Deploy') {
+      when {
+      branch 'Production'
+
+      }
+      steps {
+      script {
+
+      sh 'kubectl apply -f scripts/sapient-deploy.yaml'
+      }
+
+      }
+      }
 
     }
 }
-

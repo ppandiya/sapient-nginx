@@ -18,10 +18,10 @@ stages {
 
       stage('Deploy')
       {
-      when {
-      changeRequest target: 'master'
-
-      }
+      
+	when {
+  	changeRequest()
+	}
       steps{
       script {
       docker.withRegistry('', registryCredential )

@@ -1,16 +1,21 @@
 pipeline {
 agent any
+triggers {
+  pollSCM '* * * * *'
+}
+
 environment {
 registry = "sriprasanna25/sapient-test"
 registryCredential = 'docregistry'
 }
+
 stages {
 
       stage('Build') {
       steps {
       script {
       dockerImage = docker.build registry + ":$BUILD_NUMBER"
-      dockerImage_L = docker tag registry+ ":$BUILD_NUMBER" registry+":latest"
+      latest = docker.build registry + ":latest"
 
       }
 
@@ -29,7 +34,7 @@ stages {
       docker.withRegistry('', registryCredential )
       {
       dockerImage.push()
-      dockerImage_L.push()
+      latest.push()
       }
       }
 
@@ -64,3 +69,4 @@ stages {
 
     }
 }
+

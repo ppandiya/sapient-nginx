@@ -1,14 +1,15 @@
 pipeline {
     agent any
-    environment {
-        CI = 'true'
-    }
+ environment {
+    registry = "sriprasanna25/sapient-test"
+    registryCredential = 'docregistry'
+  }
     stages {
 
         stage('Build') {
             steps {
                 script {
-                  docker.build sriprasanna25 + ":$BUILD_NUMBER"
+                  docker.build registry + ":$BUILD_NUMBER"
 
                 }            }
         }

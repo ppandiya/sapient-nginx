@@ -19,12 +19,7 @@ pipeline {
 
 	stage('Deploy')
   {
-           when {
-               allOf {
-                   environment name: 'CHANGE_ID', value: ''
-                   branch 'master'
-               }
-           }
+           when { changeRequest target: 'master' }
 
 steps{
     script {

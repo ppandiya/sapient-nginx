@@ -1,5 +1,8 @@
 pipeline {
 agent any
+
+// Poll SCM for automated trigger - cron : every minute
+
 triggers {
   pollSCM '* * * * *'
 }
@@ -9,7 +12,10 @@ registry = "sriprasanna25/sapient-test"
 registryCredential = 'docregistry'
 }
 
+
 stages {
+
+// Build an docker dockerImage
 
       stage('Build') {
       steps {
@@ -22,6 +28,7 @@ stages {
       }
       }
 
+// Push docker image when branch is master
       stage('PublishImage')
       {
 
@@ -40,20 +47,22 @@ stages {
 
       }
       }
+// Run Test stage when there is a changeRequest against master
 
       stage('Test') {
-      when {
-              allOf {
-                changeRequest target: 'master'
-              }
-            }
+      when { changeRequest() }
       steps {
       script {
-      sh 'scripts/test.sh $BUILD_NUMBER'
+      if (env.CHANGE_TARGET == 'master') {
+                        sh 'scripts/test.sh $BUILD_NUMBER'
+                    }
+      
       }
 
       }
       }
+
+// Deploy to kubernetes cluster as a deployment objet - assuming kube config is available in local. if not configure the right agent.
       stage('Deploy') {
       when {
       branch 'Production'
@@ -70,4 +79,3 @@ stages {
 
     }
 }
-

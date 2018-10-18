@@ -43,9 +43,10 @@ stages {
 
       stage('Test') {
       when {
-      branch 'master'
-
-      }
+              allOf {
+                changeRequest target: 'master'
+              }
+            }
       steps {
       script {
       sh 'scripts/test.sh $BUILD_NUMBER'

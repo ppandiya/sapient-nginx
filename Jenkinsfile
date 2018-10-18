@@ -33,14 +33,14 @@ stages {
       }
       }
       
-      stage('Sample') {
+      stage('Test') {
       when {
       branch 'master'
 
       }
       steps {
       script {
-      sh 'echo $This is a sample step'
+      sh 'scripts/test.sh'
       }
 
       }
